@@ -162,3 +162,5 @@ cython_debug/
 #.idea/
 soupUrls.txt
 restaurants_data.tsv
+geocode.tsv
+noDataRest.tsv
