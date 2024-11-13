@@ -384,7 +384,7 @@ def top_k_cosine_similarity(docs, query, k, docs_preprocessed = False, query_pre
 
   return top_k_docs
 
-#### -------------------------------- Find top-k documents with Cosine Similarity ----------------------------------------- ####
+#### -------------------------------- Build search results based on data frame the docs are part of ----------------------------------------- ####
 
 def build_search_results(index_score_tuples, df, columns, include_score = True):
   '''
