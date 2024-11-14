@@ -148,7 +148,7 @@ def tf_idf(term_id, inverted_index, preprocessed_docs, vocabulary_df, n):
 
 #### -------------------------------- Second Search Engine ----------------------------------------- ####
 
-def top_k_restaurants(query, inverted_index, vocabulary_dict, doc_tf_idf_scores, df, k=5):
+def top_k_restaurants(query, inverted_index, vocabulary_dict, doc_tf_idf_scores, df, n, k=5):
   '''
   Find the top k restaurants that match the given query using the TF-IDF scores
   Inputs:
@@ -177,14 +177,15 @@ def top_k_restaurants(query, inverted_index, vocabulary_dict, doc_tf_idf_scores,
   # Calculate the TF-IDF score of the query
   query_tf_idf_scores = [] # initialize list to store the TF-IDF scores of the query
   for term in query_tokens:
-    term_id = vocabulary_dict[term] # get the term_id of the term
-    #print(inverted_index[term_id]) # debugging line
-    n_term = len(inverted_index[term_id]) # number of documents that contain the term
-    IDF = np.log10(n / n_term) # calculate IDF of the term
-    TF = processed_query.count(term) # calculate TF of the term
-    #print(f"TF = {TF}") # debugging line
-    #print(f"IDF = {IDF}") # debuggin line
-    query_tf_idf_scores.append((term_id, TF * IDF)) # calculate TF-IDF score
+    if term in vocabulary_dict.keys():
+      term_id = vocabulary_dict[term] # get the term_id of the term
+      #print(inverted_index[term_id]) # debugging line
+      n_term = len(inverted_index[term_id]) # number of documents that contain the term
+      IDF = np.log10(n / n_term) # calculate IDF of the term
+      TF = processed_query.count(term) # calculate TF of the term
+      #print(f"TF = {TF}") # debugging line
+      #print(f"IDF = {IDF}") # debuggin line
+      query_tf_idf_scores.append((term_id, TF * IDF)) # calculate TF-IDF score
 
   query_tf_idf_scores.sort(key=lambda x: x[0]) # sort the query_tf_idf_scores in order of term_id
 
@@ -245,7 +246,7 @@ def top_k_restaurants(query, inverted_index, vocabulary_dict, doc_tf_idf_scores,
 
 #### ------------------------------ Find top-k documents with Cosine Similarity (not 2.2 specific) ------------------------------------ ####
 
-def top_k_cosine_similarity(docs, query, k, docs_preprocessed = False, query_preprocessed = False):
+def top_k_cosine_similarity(docs, query, k=5, docs_preprocessed = False, query_preprocessed = False):
   '''
   Function that preprocesses a list of documents and a query and returns
   the top k documents that match the query using cosine similarity
@@ -259,6 +260,7 @@ def top_k_cosine_similarity(docs, query, k, docs_preprocessed = False, query_pre
   top_k_docs: list of tuples (doc_id, cosine_similarity_score) of the top k documents that match the query
   '''
   docs_copy = docs.copy() # keep copy of original documents to calculate top k docs at the end
+  n = len(docs) # number of documents
 
   # Process documents if they're not already processed
   if not docs_preprocessed:
@@ -279,7 +281,7 @@ def top_k_cosine_similarity(docs, query, k, docs_preprocessed = False, query_pre
   for doc in preprocessed_docs.values():
     doc_tokens.extend(doc)
     doc_tokens = list(set(doc_tokens)) # remove duplicates
-  
+
   # Define vocabulary dictionary and dataframe (mapping terms to their IDs)
   vocabulary_dict = {term: i for i,term in enumerate(doc_tokens)} # dictionary of all vocabulary terms
   vocabulary_df = pd.DataFrame({'term': vocabulary_dict.keys(), 'term_id': vocabulary_dict.values()}) # dataframe that maps terms to IDs
@@ -287,13 +289,13 @@ def top_k_cosine_similarity(docs, query, k, docs_preprocessed = False, query_pre
   # Compute inverted_index
   inverted_index = defaultdict(list) # initialize inverted_index dictionary
   for doc_id, row in enumerate(df.description):
-    tokens = set(preprocessed_docs[doc_id]) # preprocessed description
-    for token in tokens: # eliminate duplicates
+    tokens = set(preprocessed_docs[doc_id]) # preprocessed description, eliminate duplicates
+    for token in tokens:
       # Look up the term_id of the current term/token
       term_id = vocabulary_dict[token]
       # If the doc_id is not in the term_id's list in inverted_index, add it
       if doc_id not in inverted_index[term_id]:
-        inverted_index[term_id].append(doc_id)
+        inverted_index[term_id].append(doc_id) 
 
   # Compute updated_inverted_index
   n = len(preprocessed_docs)
@@ -311,13 +313,13 @@ def top_k_cosine_similarity(docs, query, k, docs_preprocessed = False, query_pre
       if tf_idf_score != 0:
         doc_tf_idf_scores[doc_id].append((term_id,tf_idf_score))
     doc_tf_idf_scores[doc_id].sort(key=lambda x: x[0]) # sort the terms
-  
+
   # Find all docs to consider
   docs_to_consider = [] # initialize list to store documents to consider (non-zero intersection with the query tokens)
   query_tokens = list(set(processed_query)) # unique query tokens
   # Get all docs that contain tokens from the query
   for token in query_tokens:
-    if vocabulary_dict[token]: # check if the token is in the vocabulary
+    if token in vocabulary_dict: # check if the token is in the vocabulary
       token_id = vocabulary_dict[token] # get the term_id of the token
       docs_to_consider.extend(inverted_index[token_id]) # add the documents that contain the token to the docs to consider
   docs_to_consider = list(set(docs_to_consider)) # remove duplicates
@@ -325,16 +327,17 @@ def top_k_cosine_similarity(docs, query, k, docs_preprocessed = False, query_pre
   # Calculate the TF-IDF score of the query
   query_tf_idf_scores = [] # initialize list to store the TF-IDF scores of the query
   for term in query_tokens:
-    term_id = vocabulary_dict[term] # get the term_id of the term
-    #print(inverted_index[term_id]) # debugging line
-    n_term = len(inverted_index[term_id]) # number of documents that contain the term
-    #print(n_term)
-    IDF = np.log10(n / n_term) # calculate IDF of the term
-    #print(f"IDF= {IDF}") # debugging line
-    TF = processed_query.count(term) # calculate TF of the term
-    query_tf_idf_scores.append((term_id, TF * IDF)) # calculate TF-IDF score
+    if term in vocabulary_dict.keys():
+      term_id = vocabulary_dict[term] # get the term_id of the term
+      #print("II[termi_id]= ", inverted_index[term_id]) # debugging line
+      n_term = len(inverted_index[term_id]) # number of documents that contain the term
+      #print("n_term = ", n_term) # debugging lines
+      IDF = np.log10(n / n_term) # calculate IDF of the term
+      #print(f"IDF= {IDF}") # debugging line
+      TF = processed_query.count(term) # calculate TF of the term
+      query_tf_idf_scores.append((term_id, TF * IDF)) # calculate TF-IDF score
   query_tf_idf_scores.sort(key=lambda x: x[0]) # sort the query_tf_idf_scores in order of term_id
-   
+
   # Query and document norms
   query_norm = np.linalg.norm(np.array([score for _, score in query_tf_idf_scores])) # calculate the norm of the query
   doc_norms = {doc_id: np.linalg.norm(np.array([doc_tf_idf_scores[doc_id][i][1] for i in range(len(doc_tf_idf_scores[doc_id]))])) for doc_id in docs_to_consider} # calculate document norms
@@ -374,7 +377,7 @@ def top_k_cosine_similarity(docs, query, k, docs_preprocessed = False, query_pre
 
   # Sort the cosine similarities in descending order
   sorted_cosine_similarity = sorted(cosine_similarity.items(), key=lambda x: x[1], reverse=True) # list of tuples
-   
+
   # Get the top k docs
   top_k_docs = sorted_cosine_similarity[:min(k,len(sorted_cosine_similarity))]
 
@@ -382,9 +385,12 @@ def top_k_cosine_similarity(docs, query, k, docs_preprocessed = False, query_pre
   #top_k_docs_df = pd.DataFrame([{'docName': docs_copy.loc[doc_id], 'similarity': score} for doc_id, score in top_k_docs_tuples])
   #top_k_docs_indices = [doc_id for doc_id, _ in top_k_docs_tuples]
 
+  if not top_k_docs:
+    print("No documents found for the given query.")
+
   return top_k_docs
 
-#### -------------------------------- Build search results based on data frame the docs are part of ----------------------------------------- ####
+#### -------------------------------- Build Result Data Frame for top k documents ----------------------------------------- ####
 
 def build_search_results(index_score_tuples, df, columns, include_score = True):
   '''
