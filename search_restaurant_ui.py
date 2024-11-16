@@ -1,8 +1,10 @@
 import ipywidgets as ipw
 import pandas as pd
+from ipywidgets import HTML
 from itertools import chain
-import functions
+from functions import utils
 from IPython.display import display
+
 
 class SearchRestaurantUI:
     def __init__(self, df, vocabulary_df, inverted_index):
@@ -10,56 +12,67 @@ class SearchRestaurantUI:
         self.vocabulary_df = vocabulary_df
         self.inverted_index = inverted_index
 
-        # Estrai i valori unici per ciascuna colonna
+        # Extract unique values for each column
         self.cuisine_types = sorted(df['cuisineType'].unique().tolist())
-        self.all_facilities = sorted(list(set(chain(*df['facilitiesServices'].apply(eval))))) # Chain fa diventare tutte le liste di stringhe ovvero la colonna una lista unica
+
+        # We used chain to flatten the list of lists into a single list for all facilities
+        # then set to remove the duplicates and eval to converts this to List
+        self.all_facilities = sorted(list(set(chain(*df['facilitiesServices'].apply(eval)))))
         self.price_ranges = sorted(df['priceRange'].unique().tolist())
 
-        # Crea i widget
+        # Create the widgets
         self.create_widgets()
 
-        # Output per i risultati
+        # Create the results output area
         self.output = ipw.Output()
 
     def create_widgets(self):
-        # Dropdown per il tipo di cucina
+        # Dropdown for cuisine type selection
         self.ddCuisineType = ipw.Dropdown(
-            options=['All'] + self.cuisine_types,
-            value='All',
-            description='Cuisine Type:',
+            options=['All'] + self.cuisine_types, # We added all to allow no filtering
+            value='All', # Default value
+            description='Cuisine:',
             disabled=False
         )
 
-        # Checkbox per selezione multipla dei servizi
-        self.facilities_checkboxes = [ipw.Checkbox(value=False, description=facility) for facility in self.all_facilities]
-        self.facilities_box = ipw.VBox(self.facilities_checkboxes)
+        # Checkbox for multiple facilities and services selection
+        self.facilities_label = HTML(value="<b>Facilities:</b>")  # Bolded label using HTML
 
-        # Dropdown per la fascia di prezzo
+        # Create checkboxes for each facility
+        self.facilities_checkboxes = [ipw.Checkbox(
+            value=False,
+            description=facility) for facility in self.all_facilities]
+
+        # Combine the label and checkboxes in a single VBox
+        self.facilities_box = ipw.VBox([self.facilities_label] + self.facilities_checkboxes)
+
+        # Dropdown for price range selection
         self.ddPriceRange = ipw.Dropdown(
-            options=['All'] + self.price_ranges,
+            options=['All'] + self.price_ranges, # Same as cuisineType
             value='All',
             description='Price Range:',
             disabled=False
         )
 
-        # Text box per inserire il testo di ricerca
+        # Text box for custom search query input
         self.txtQuery = ipw.Text(
-            value='',
+            value='',   # Default value
             placeholder='Insert your text...',
-            description='Text to search:',
+            description='Search:',
             disabled=False
         )
 
+        # Slider for selecting the number of results
         self.num_results = ipw.IntSlider(
             value=5,
-            min=1,
-            max=50,
+            min=1,  # Min number of results
+            max=50, # Max number of results
             step=1,
             description='Results:',
             continuous_update=False
         )
 
-        # Bottone di ricerca
+        # Search button
         self.btSearch = ipw.Button(
             description='Search',
             disabled=False,
@@ -68,7 +81,7 @@ class SearchRestaurantUI:
             icon='search'
         )
 
-        # Bottone per pulire i campi
+        # Clear button to clear all fields
         self.btClear = ipw.Button(
             description='Clear',
             disabled=False,
@@ -76,17 +89,17 @@ class SearchRestaurantUI:
             tooltip='Clear the search form'
         )
 
-        # Collega i bottoni alle funzioni di callback
+        # Callback functions to define what to do on button click
         self.btSearch.on_click(self.on_search_click)
         self.btClear.on_click(self.on_clear_click)
 
     def on_search_click(self, b):
-        # Cancella l'output precedente
+        # Clear any previous results output
         self.output.clear_output()
 
         with self.output:
             try:
-                # Raccolta dei valori inseriti dall'utente
+                # Collect user input into a dictionary
                 query = {
                     'description': self.txtQuery.value,
                     'cuisineType': None if self.ddCuisineType.value == 'All' else self.ddCuisineType.value,
@@ -95,8 +108,8 @@ class SearchRestaurantUI:
                     'num_results': self.num_results.value
                 }
 
-                # Chiamata alla funzione di ricerca
-                result_df = functions.find_top_custom_restaurants(
+                # Call search function and get the results
+                result_df = utils.find_top_custom_restaurants(
                     query,
                     self.vocabulary_df,
                     self.inverted_index,
@@ -106,13 +119,15 @@ class SearchRestaurantUI:
                 if result_df.empty:
                     print("No restaurant has been found with the current selections.")
                 else:
-                    # Visualizzazione del numero di risultati selezionato dall'utente
-                    display(result_df.head(query['num_results']))
+                    # Display the result pandas DataFrame
+                    display(result_df)
 
             except Exception as e:
                 print(f"Error during the search: {str(e)}")
 
+    # Callback function for the clear button
     def on_clear_click(self, b):
+        # Reset all widgets to default values
         self.txtQuery.value = ''
         self.ddCuisineType.value = 'All'
         for cb in self.facilities_checkboxes:
@@ -120,12 +135,12 @@ class SearchRestaurantUI:
         self.ddPriceRange.value = 'All'
         self.num_results.value = 5
 
+    # Display the entire UI
     def display(self):
-        # Creazione del layout dell'interfaccia
+        # Create the layout
         search_box = ipw.VBox([
             self.txtQuery,
             self.ddCuisineType,
-            ipw.Label('Facilities:'),
             self.facilities_box,
             self.ddPriceRange,
             self.num_results,

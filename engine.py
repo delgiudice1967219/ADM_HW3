@@ -1,4 +1,5 @@
 
+
 import nltk
 nltk.download('stopwords')
 nltk.download('punkt')
@@ -247,7 +248,7 @@ def top_k_restaurants(query, inverted_index, vocabulary_dict, doc_tf_idf_scores,
 
 #### ------------------------------ Find top-k documents with Cosine Similarity (not 2.2 specific) ------------------------------------ ####
 
-def top_k_cosine_similarity(docs, query, k=5, docs_preprocessed = False, query_preprocessed = False):
+def top_k_cosine_similarity(docs, query, k = 5, docs_preprocessed = False, query_preprocessed = False):
   '''
   Function that preprocesses a list of documents and a query and returns
   the top k documents that match the query using cosine similarity
@@ -296,7 +297,7 @@ def top_k_cosine_similarity(docs, query, k=5, docs_preprocessed = False, query_p
       term_id = vocabulary_dict[token]
       # If the doc_id is not in the term_id's list in inverted_index, add it
       if doc_id not in inverted_index[term_id]:
-        inverted_index[term_id].append(doc_id) 
+        inverted_index[term_id].append(doc_id)
 
   # Compute updated_inverted_index
   n = len(preprocessed_docs)
