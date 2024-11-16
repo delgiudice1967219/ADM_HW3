@@ -157,6 +157,7 @@ def top_k_restaurants(query, inverted_index, vocabulary_dict, doc_tf_idf_scores,
   vocabulary_dict: dictionary containing the vocabulary of terms and their indeces
   doc_tf_idf_scores: dictionary storing the TF-IDF scores for each term in each document
   df: dataframe with restaurants data
+  n: total number of documents
   k: number of restaurants to return
   Outputs:
   restaurants_df: dataframe with restaurants that match the query
