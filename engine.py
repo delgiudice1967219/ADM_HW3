@@ -288,7 +288,7 @@ def top_k_cosine_similarity(docs, query, k=5, docs_preprocessed = False, query_p
 
   # Compute inverted_index
   inverted_index = defaultdict(list) # initialize inverted_index dictionary
-  for doc_id, row in enumerate(df.description):
+  for doc_id, row in enumerate(docs):
     tokens = set(preprocessed_docs[doc_id]) # preprocessed description, eliminate duplicates
     for token in tokens:
       # Look up the term_id of the current term/token
