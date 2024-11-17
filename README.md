@@ -232,6 +232,9 @@ This project uses Dash and Plotly to create an interactive map of Italian region
 https://github.com/user-attachments/assets/6df75914-25e6-4b96-93f0-d4db64be7151
 
 ## 5. Advanced Search Engine
+
+https://github.com/user-attachments/assets/6dd25cdf-3a59-4426-ad9b-72cc708909d9
+
 ---
 
 ## License
