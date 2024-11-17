@@ -72,7 +72,6 @@ def crawl_restaurant_links(base_url, txt_out_pathname):
 
     print(f"Crawling completed. {len(all_links)} link saved in michelin_restaurant_urls.txt.")
 
-# CRAWLER.PY
 def fetch_page(url):
     try:
         response = requests.get(url)
