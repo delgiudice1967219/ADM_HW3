@@ -52,6 +52,7 @@ def iterate_folders(output_dir):
     return restaurants_data
 
 def iterate_geo_folders(output_dir):
+
     # List to store restaurant data
     restaurants_data = []
 
@@ -61,12 +62,12 @@ def iterate_geo_folders(output_dir):
         # Costruisci il percorso della cartella per ciascuna pagina
         folder_path = os.path.join(output_dir, f"page_{page_num}")
         
-        # Trova tutti i file di testo che iniziano con "html_" nella cartella corrente
-        html_files = glob.glob(os.path.join(folder_path, "html_*.txt"))
+        # Trova tutti i file HTML nella cartella corrente
+        html_files = glob.glob(os.path.join(folder_path, "*.html"))
         
         # Itera attraverso i file trovati e processa ciascuno
         for file_path in html_files:
-            print(file_path)
+            print("Processing:", file_path)
             restaurant_info = parser.extract_geo_info(file_path)
             restaurants_data.append(restaurant_info)
 
@@ -87,7 +88,6 @@ def translateRegions(regionColumn):
     regionColumn = regionColumn.replace(translations) 
 
     return regionColumn
-
 
 def fetch_page(url):
     '''
@@ -239,8 +239,6 @@ def extract_restaurant_info(file_path):
         restaurant_info['website'] = website_link["href"].strip() if website_link else None
 
     return restaurant_info
-
-
 
 def find_restaurants_updated(query_text, vocabulary_df, inverted_index, df):
     '''

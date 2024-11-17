@@ -6,6 +6,72 @@ import aiohttp
 import asyncio
 import aiofiles
 
+from bs4 import BeautifulSoup
+
+def crawl_restaurant_links(base_url, txt_out_pathname):
+    print("I'm starting to Scrape!")
+    page = 1
+    # Link list to return as a file.txt
+    all_links = []
+
+    while True:
+        # Build URL of current page which is base_url + # of the current page
+        url = f"{base_url}{page}"
+        print(f"Fetching {url}...")
+        response = requests.get(url)
+
+        # Check if the HTTP request was successful, otherwise stop scraping and print error message
+        if response.status_code != 200:
+            print(f"Errore nel caricamento della pagina {page}")
+            break
+
+        # Parsing of the HTML page using Beautiful Soup
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Dig in HTML structure to search every restaurnt URL in the current page, first element is the <div> tag that has following class
+        for class1_div in soup.select("div.card__menu-content.card__menu-content--flex.js-match-height-content"):
+            # Next is the <h3> tag that has the following class, this tag also has an attribute "href" 
+            # with the link of the current restaurant, we need to retrive this link 
+            h3 = class1_div.select_one("h3.card__menu-content--title.pl-text.pl-big.js-match-height-title a")
+            if h3:
+                link = h3.get("href")
+                # Build the link and add to link list
+                full_link = "https://guide.michelin.com" + link if link else None
+                if full_link:
+                    all_links.append(full_link)
+
+
+        # In this section of the scraping algorithm, we search for the "next page" button so that
+        # we can scrape the other pages links.
+
+        # First step is to find the div that contains pages button which is the div with the followind class
+        pagination_lis = soup.select("div.js-restaurant__bottom-pagination ul li")
+
+        # Next, we should find the button which has "active" in the class (which indicate the current page)
+        active_index = None
+        for i, li in enumerate(pagination_lis):
+            if li.select_one("a.active"):
+                active_index = i
+                break
+
+        # After we have found the current button, we search for immediate next button, 
+        # who contains link to the next page in the <a> tag, if next page is present.
+        if active_index is not None and active_index + 1 < len(pagination_lis):
+            next_page = pagination_lis[active_index + 1].select_one("a")
+            if next_page and next_page.get("href"):
+                page += 1
+            else:
+                break
+        else:
+            break
+
+    # Save every URL in a .txt file
+    with open(txt_out_pathname, "w") as file:
+        for link in all_links:
+            file.write(link + "\n")
+
+    print(f"Crawling completed. {len(all_links)} link saved in michelin_restaurant_urls.txt.")
+
 # CRAWLER.PY
 def fetch_page(url):
     try:
