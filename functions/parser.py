@@ -1,4 +1,3 @@
-import requests
 import re
 import json
 from bs4 import BeautifulSoup
@@ -46,7 +45,7 @@ def extract_restaurant_info(file_path):
             # Price Range
             restaurant_info['priceRange'] = restaurant_info['priceRange'].strip()
             # List of cuisine types
-            restaurant_info['cuisineType'] = restaurant_info['cuisineType'].strip().split(",")
+            restaurant_info['cuisineType'] = restaurant_info['cuisineType'].strip()
 
         # Description
         restaurant_info['description'] = soup.find("div", class_="data-sheet__description").text.strip().replace("\n", "")

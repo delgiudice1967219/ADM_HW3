@@ -1,11 +1,9 @@
 import requests
 import os
 import re
-
 import aiohttp
 import asyncio
 import aiofiles
-
 from bs4 import BeautifulSoup
 
 def crawl_restaurant_links(base_url, txt_out_pathname):
@@ -22,7 +20,7 @@ def crawl_restaurant_links(base_url, txt_out_pathname):
 
         # Check if the HTTP request was successful, otherwise stop scraping and print error message
         if response.status_code != 200:
-            print(f"Errore nel caricamento della pagina {page}")
+            print(f"Error while loading the page {page}")
             break
 
         # Parsing of the HTML page using Beautiful Soup
@@ -66,7 +64,7 @@ def crawl_restaurant_links(base_url, txt_out_pathname):
             break
 
     # Save every URL in a .txt file
-    with open(txt_out_pathname, "w") as file:
+    with open(txt_out_pathname, "w", encoding="utf-8") as file:
         for link in all_links:
             file.write(link + "\n")
 
@@ -78,7 +76,7 @@ def fetch_page(url):
         response.raise_for_status()  # Controlla se ci sono errori HTTP
         return response.text
     except requests.exceptions.RequestException as e:
-        print(f"Errore durante la richiesta: {e}")
+        print(f"Error during request: {e}")
         return None
     
 # Download a single URL
@@ -93,14 +91,14 @@ async def download_url(session, url, folder_name):
         async with session.get(url, headers=headers) as response:
             if response.status == 200:
                 content = await response.text()
-                
+
                 # Extract the restaurant name from the URL so that the HTML could be saved using this name
                 match = re.search(r'[^/]+$', url)
                 restaurant_name = match.group() if match else "unknown"
                 filename = os.path.join(folder_name, f"{restaurant_name}.html")
 
                 # Asynchronously save the content of HTML page to a file
-                async with aiofiles.open(filename, 'w') as f:
+                async with aiofiles.open(filename, 'w', encoding='utf-8') as f:
                     await f.write(content)
                 print(f"Downloaded: {url}")
             else:
@@ -109,7 +107,7 @@ async def download_url(session, url, folder_name):
     except Exception as e:
         # Handle and log any other exceptions during the download process
         print(f"Error downloading {url}: {e}")
-  
+
 # Download all URLs, organizing them into folders
 async def download_all(urls, output_dir):
     CONCURRENT_REQUESTS = 20  # Limit the number of concurrent requests
@@ -131,6 +129,6 @@ async def download_all(urls, output_dir):
 
 # Load URLs from a file
 async def load_urls(file_path):
-    async with aiofiles.open(file_path, 'r') as f:
+    async with aiofiles.open(file_path, 'r', encoding='utf-8') as f:
         urls = [line.strip() for line in await f.readlines()]
     return urls

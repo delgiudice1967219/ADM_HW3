@@ -2,7 +2,7 @@ import ipywidgets as ipw
 import pandas as pd
 from ipywidgets import HTML
 from itertools import chain
-from functions import utils
+from functions import engine
 from IPython.display import display
 
 
@@ -109,7 +109,7 @@ class SearchRestaurantUI:
                 }
 
                 # Call search function and get the results
-                result_df = utils.find_top_custom_restaurants(
+                result_df = engine.find_top_custom_restaurants(
                     query,
                     self.vocabulary_df,
                     self.inverted_index,
