@@ -7,7 +7,7 @@ This GitHub repository contains the implementation of the third homework of the 
 * Alessio Iacono, 1870276, iacono.1870276@studenti.uniroma1.it
 * Géraldine Valérie Maurer, 1996887, gmaurer08@gmail.com
 
-The ```main.ipynb``` with the main script can be visualized in the jupyter notebook viewer: **INSERT LINK TO NBVIEWER**
+The ```main.ipynb``` with the main script can be visualized in the jupyter notebook viewer: [nbviewer](https://nbviewer.org/github/delgiudice1967219/ADM_HW3/blob/main/main.ipynb)
 
 ## Repository Structure
 
