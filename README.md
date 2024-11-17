@@ -45,9 +45,6 @@ Here are links to all the files:
 
 ---
 
-This structure will allow users to click and jump directly to specific sections in your README file. Let me know if there's anything else you'd like to adjust!
-
----
 ## Project Overview
 
 ## 1. Data collection
