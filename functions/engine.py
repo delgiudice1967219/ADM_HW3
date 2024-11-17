@@ -40,7 +40,6 @@ def preprocessing(doc):
 
     # Remove punctuation
     tokens = [token for token in tokens if token not in string.punctuation]
-    # tokens = [re.sub(r'[^\w\s]','',token) for token in tokens]
 
     # Apply stemming
     stemmer = PorterStemmer()
@@ -80,6 +79,7 @@ def find_restaurants(query, vocabulary_df, inverted_index, df):
     Find restaurants that match the given query using the inverted index
     Inputs:
     query: query string
+    vocabulary_df: data frame containing two columns, 'term' and 'term_id', with terms and their IDs
     inverted_index: inverted index dictionary
     df: dataframe with restaurants data
     Outputs:
@@ -88,10 +88,10 @@ def find_restaurants(query, vocabulary_df, inverted_index, df):
     # Preprocess the query
     query_tokens = preprocessing(query)
 
-    target_docs = []
+    target_docs = [] # Initialize list to store output restaurants
 
-    try:
-      # Retrieve the term_ids for each token in the query
+    try: # Try finding restaurants 
+      # Retrieve the term_ids for each token in the query (if a query term is not in the vocabulary, it raises an error, handled in the 'except' block)
       term_ids = [vocabulary_df[vocabulary_df['term'] == token]['term_id'].iloc[0] for token in query_tokens]
 
       # Retrieve the document IDs for each term_id (from inverted index)
@@ -114,7 +114,7 @@ def find_restaurants(query, vocabulary_df, inverted_index, df):
       # Return the DataFrame with the matching restaurants
       return restaurants_df
 
-    except:
+    except: # If no restaurants are found, print this result
       print("No restaurants found for the given query.")
 
 #### -------------------------------- TF-IDF scores for terms ----------------------------------------- ####
@@ -124,7 +124,7 @@ def tf_idf(term_id, inverted_index, preprocessed_docs, vocabulary_df, n):
   Calculate the TF-IDF scores for a given term
   Inputs:
   term_id: term id
-  inverted_index: dictionary storing the documents that each term appears in
+  inverted_index: dictionary storing the documents that each term appears in, with keys the term IDs
   preprocessed_docs: dictionary storing all the preprocessed documents
   vocabulary_df: dataframe containing the vocabulary of terms
   n = total number of documents
@@ -134,9 +134,7 @@ def tf_idf(term_id, inverted_index, preprocessed_docs, vocabulary_df, n):
 
   term = vocabulary_df['term'][term_id] # get term from term_id
   n_term = len(inverted_index[term_id]) # number of documents that contain the term
-  #print(n_term) # debugging line
   IDF = np.log10(n / n_term) # calculate IDF of the term, inverse document frequency
-  #print(f"IDF= {IDF}") # debugging line
   tf_idf_scores = [] # initialize list to store TF-IDF scores
 
   for doc_id in inverted_index[term_id]:
@@ -159,16 +157,15 @@ def top_k_restaurants(query, inverted_index, vocabulary_dict, doc_tf_idf_scores,
   doc_tf_idf_scores: dictionary storing the TF-IDF scores for each term in each document
   df: dataframe with restaurants data
   n: total number of documents
-  k: number of restaurants to return
+  k: number of restaurants to return, 5 by default
   Outputs:
   restaurants_df: dataframe with restaurants that match the query
   '''
   processed_query = preprocessing(query) # processed query
   query_tokens = list(set(processed_query)) # unique query tokens
-  #print(query_tokens) # debugging line
+    
   # Find all docs to consider
   docs_to_consider = [] # initialize list to store documents to consider (non-zero intersection with the query tokens)
-
   for token in query_tokens:
     if vocabulary_dict[token]: # check if the token is in the vocabulary
       token_id = vocabulary_dict[token] # get the term_id of the token
@@ -181,19 +178,15 @@ def top_k_restaurants(query, inverted_index, vocabulary_dict, doc_tf_idf_scores,
   for term in query_tokens:
     if term in vocabulary_dict.keys():
       term_id = vocabulary_dict[term] # get the term_id of the term
-      #print(inverted_index[term_id]) # debugging line
       n_term = len(inverted_index[term_id]) # number of documents that contain the term
       IDF = np.log10(n / n_term) # calculate IDF of the term
       TF = processed_query.count(term) # calculate TF of the term
-      #print(f"TF = {TF}") # debugging line
-      #print(f"IDF = {IDF}") # debuggin line
       query_tf_idf_scores.append((term_id, TF * IDF)) # calculate TF-IDF score
 
   query_tf_idf_scores.sort(key=lambda x: x[0]) # sort the query_tf_idf_scores in order of term_id
 
   query_norm = np.linalg.norm(np.array([score for _, score in query_tf_idf_scores])) # calculate the norm of the query
-  #print(f"query tf_idf_scores: {query_tf_idf_scores}") # debuggin line
-  #print(f"query norm: {query_norm}") # debugging line
+
   # calculate document norms
   doc_norms = {doc_id: np.linalg.norm(np.array([doc_tf_idf_scores[doc_id][i][1] for i in range(len(doc_tf_idf_scores[doc_id]))])) for doc_id in docs_to_consider}
 
@@ -203,22 +196,22 @@ def top_k_restaurants(query, inverted_index, vocabulary_dict, doc_tf_idf_scores,
     '''
     Calculate the intersection of the query and the document
     Inputs:
-    query_terms: list of sorted unique query terms
-    doc_terms: list of sorted unique document terms
+    query_tf_idf_scores: sorted list of tuples (term, query_tf_idf) for the query
+    doc_tf_idf_scores: sorted list of tuples (term, doc_tf_idf) for a document
     Output:
-    query_intersection: list of tuples (term, query_tf_idf)
-    doc_intersection: list of tuples (term, doc_tf_idf)
+    query_intersection: list of tuples (term, query_tf_idf) with term in the intersection
+    doc_intersection: list of tuples (term, doc_tf_idf) with term in the intersection
     '''
     query_intersection = [] # initialize list to store (term, query_tf_idf) tuples in the intersection
     doc_intersection = [] # initialize list to store (term, doc_tf_idf) tuples in the intersection
     i, j = 0, 0 # initialize two pointers
     while i<len(query_tf_idf_scores) and j<len(doc_tf_idf_scores):
-      if query_tf_idf_scores[i][0] == doc_tf_idf_scores[j][0]:
-        query_intersection.append(query_tf_idf_scores[i])
+      if query_tf_idf_scores[i][0] == doc_tf_idf_scores[j][0]: # if they have the same term, add it to the intersection
+        query_intersection.append(query_tf_idf_scores[i]) 
         doc_intersection.append(doc_tf_idf_scores[j])
-        i += 1
+        i += 1 # move pointers
         j += 1
-      elif query_tf_idf_scores[i][0] < doc_tf_idf_scores[j][0]:
+      elif query_tf_idf_scores[i][0] < doc_tf_idf_scores[j][0]: # move pointers if the terms don't coincide
         i += 1
       else:
         j += 1
@@ -227,18 +220,17 @@ def top_k_restaurants(query, inverted_index, vocabulary_dict, doc_tf_idf_scores,
   # Calculate cosine-similarity between the query and each document
   cosine_similarity = defaultdict(float) # initialize dictionary to store the cosine similarity results
   for doc_id in docs_to_consider:
-    query_intersection, doc_intersection = query_doc_intersection(query_tf_idf_scores, doc_tf_idf_scores[doc_id]) # find the
+    query_intersection, doc_intersection = query_doc_intersection(query_tf_idf_scores, doc_tf_idf_scores[doc_id]) # find the intersection of terms in query and doc
     cosine_similarity[doc_id] = np.dot(np.array([score for _, score in query_intersection]), np.array([score for _, score in doc_intersection])) / (query_norm * doc_norms[doc_id])
 
   # Sort the cosine similarities in descending order
-  sorted_cosine_similarity = sorted(cosine_similarity.items(), key=lambda x: x[1], reverse=True) # list of tuples
+  sorted_cosine_similarity = sorted(cosine_similarity.items(), key=lambda x: x[1], reverse=True) # list of tuples (doc_id, score)
 
   # Get the top k restaurants
   top_k_restaurants = sorted_cosine_similarity[:min(k,len(sorted_cosine_similarity))]
 
   top_k_restaurant_idx = [doc_id for doc_id, _ in top_k_restaurants]
   top_k_restaurant_scores = [score for _, score in top_k_restaurants]
-  #print([score for _, score in top_k_restaurants])
 
   # build result dataframe
   restaurants_df = df.loc[top_k_restaurant_idx][['restaurantName', 'address', 'description', 'website']]
@@ -350,8 +342,8 @@ def top_k_cosine_similarity(docs, query, k = 5, docs_preprocessed = False, query
       '''
       Calculate the intersection of the query and the document with tf-idf scores
       Inputs:
-      query_terms: list of sorted tuples of unique query terms and their tf-idf scores
-      doc_terms: list of sorted tuples of unique document terms and their tf-idf scores
+      query_tf_idf_scores: list of sorted tuples of unique query terms and their tf-idf scores
+      doc_tf_idf_scores: list of sorted tuples of unique document terms and their tf-idf scores
       Output:
       query_intersection: list of tuples (term, query_tf_idf)
       doc_intersection: list of tuples (term, doc_tf_idf)
@@ -360,7 +352,7 @@ def top_k_cosine_similarity(docs, query, k = 5, docs_preprocessed = False, query
       doc_intersection = [] # initialize list to store (term, doc_tf_idf) tuples in the intersection
       i, j = 0, 0 # initialize two pointers
       while i<len(query_tf_idf_scores) and j<len(doc_tf_idf_scores):
-        if query_tf_idf_scores[i][0] == doc_tf_idf_scores[j][0]:
+        if query_tf_idf_scores[i][0] == doc_tf_idf_scores[j][0]: # if this term is in both query and doc, add it to the intersection
           query_intersection.append(query_tf_idf_scores[i])
           doc_intersection.append(doc_tf_idf_scores[j])
           i += 1
@@ -374,7 +366,7 @@ def top_k_cosine_similarity(docs, query, k = 5, docs_preprocessed = False, query
   # Calculate cosine-similarity between the query and each document
   cosine_similarity = defaultdict(float) # initialize dictionary to store the cosine similarity results
   for doc_id in docs_to_consider:
-    query_intersection, doc_intersection = query_doc_intersection(query_tf_idf_scores, doc_tf_idf_scores[doc_id]) # find the
+    query_intersection, doc_intersection = query_doc_intersection(query_tf_idf_scores, doc_tf_idf_scores[doc_id]) # find the intersection between query and doc
     cosine_similarity[doc_id] = np.dot(np.array([score for _, score in query_intersection]), np.array([score for _, score in doc_intersection])) / (query_norm * doc_norms[doc_id])
 
   # Sort the cosine similarities in descending order
@@ -396,7 +388,7 @@ def top_k_cosine_similarity(docs, query, k = 5, docs_preprocessed = False, query
 
 def build_search_results(index_score_tuples, df, columns, include_score = True):
   '''
-  Function that builds the dataframe of search results we want to return
+  Function that builds the dataframe of search results we want to return, given sorted doc indeces and their scores
   Inputs:
   index_score_tuples: tuples (index, score) containing doc_id and its cosine similarity score wrt to a query
   df: the original dataframe where the queried docs come from, that we can slice using the indices
