@@ -1,3 +1,27 @@
+# ADM - Homework 3: Michelin Restaurants in Italy
+
+## Repository Structure
+
+```
+├── GeoJson/                     # Directory containing files for map visualization
+│   ├── italy_map+geojson.json       # GeoJSON file with Italian map data for visualization
+│   └── limits_IT_regions.geojson    # GeoJSON file with Italian regional boundaries
+├── functions/                   # Directory containing core project modules
+│   ├── crawler.py               # Module for scraping Michelin restaurant data
+│   ├── parser.py                # Module for parsing and extracting data from HTML files
+│   ├── engine.py                # Implementation of the search engine (conjunctive and ranked search)
+│   ├── search_restaurants_ui.py # User interface for advanced search and custom scoring
+│   └── utils.py                 # Helper functions for text preprocessing, scoring, and utilities
+├── main.ipynb                   # Main notebook containg all the runned cells
+├── .gitignore                   # File to specify files and directories ignored by Git
+├── README.md                    # Project documentation
+└── LICENSE                      # License file for the project
+```
+
+---
+
+## Project Overview
+
 ## Point 1. Data collection
 
 This project require to scrape data from [Italian Michelin guide website](https://guide.michelin.com/en/it/restaurants), this process is divided into various steps:
@@ -21,7 +45,7 @@ This project require to scrape data from [Italian Michelin guide website](https:
 Before starting the script, these we install each dependency needed:
 
 ```bash
-   pip install requests bs4 aiohttp asyncio aiofiles
+   %pip install unidecode geopy plotly dash aiofiles aiohttp nltk ipywidgets requests bs4 pandas
 ```
 
 ### Steps of the script:
@@ -53,6 +77,10 @@ Before starting the script, these we install each dependency needed:
    -  **Input**: Reads HTML files from the downloads directory.
    -  **Parsing**: Uses BeautifulSoup to parse HTML and extract information needed, at the end, data will be stored in dictionary.
    -  **Output**: Aggregates the restaurant dictionaries into a Pandas DataFrame and saves the data as a TSV file (*restaurants_data.tsv*).
+
+## Point 2.
+
+## Point 3.
 
 ## Point 4. Interactive Map of Italian Regions with restaurants by price range and Top-k restaurants
 
@@ -102,3 +130,49 @@ This project uses Dash and Plotly to create an interactive map of Italian region
     3. Run Point 4.1 to 
 
 ### Screenshot (or GIF) of maps
+
+---
+
+## Usage
+
+### 1. **Setup**
+   Install the required Python packages using:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+### 2. **Data Collection**
+   - Run the web crawler to scrape restaurant data:
+     ```bash
+     python crawler.py
+     ```
+   - The crawler saves HTML files and extracted restaurant information into the `data/` directory.
+
+### 3. **Search Engine**
+   - **Conjunctive Search**:
+     ```bash
+     python engine.py --query "modern seasonal cuisine" --type conjunctive
+     ```
+   - **Ranked Search**:
+     ```bash
+     python engine.py --query "modern seasonal cuisine" --type ranked --top_k 10
+     ```
+
+### 4. **Visualization**
+   - Generate a map of restaurants:
+     ```bash
+     python visualization.py
+     ```
+
+### 5. **Advanced Search**
+   - Example usage with filters:
+     ```bash
+     python engine.py --query "Mediterranean cuisine" --type advanced --price_range "€€€" --region "Tuscany"
+     ```
+
+---
+
+## License
+This project is licensed under the MIT License. See the `LICENSE` file for more details.
+
+---
