@@ -173,6 +173,8 @@ In this part of the project we implement two search engines:
    
 ## 3. Define a New Score!
 
+https://github.com/user-attachments/assets/b6d04672-8e3c-4f37-b4bf-ee574cd8034f
+
 ## 4. Interactive Map of Italian Regions with restaurants by price range and Top-k restaurants
 
 This project uses Dash and Plotly to create an interactive map of Italian regions. Users can select a region by clicking on the map and view additional details, such as the restaurants in the selected region.
