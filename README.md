@@ -1,6 +1,6 @@
 # ADM - Homework 3: Michelin Restaurants in Italy, Group #14
 
-This GitHub repository contains the implementation of the third homework of the **Algorithmic Methods of Data Mining** course for the master's degree in Data Science at Sapienza (2024-2025). This homework was completed by Group #9 in the academic year 2024–2025. The details of the assignement are specified here: https://github.com/Sapienza-University-Rome/ADM/tree/master/2024/Homework_3
+This GitHub repository contains the implementation of the third homework of the **Algorithmic Methods of Data Mining** course for the master's degree in Data Science at Sapienza (2024-2025). This homework was completed by Group #14 in the academic year 2024–2025. The details of the assignement are specified here: https://github.com/Sapienza-University-Rome/ADM/tree/master/2024/Homework_3
 
 **Team Members:**
 * Xavier Del Giudice, 1967219, delgiudice.1967219@studenti.uniroma1.it
@@ -103,7 +103,7 @@ Before starting the script, these we install each dependency needed:
    -  **Parsing**: Uses BeautifulSoup to parse HTML and extract information needed, at the end, data will be stored in dictionary.
    -  **Output**: Aggregates the restaurant dictionaries into a Pandas DataFrame and saves the data as a TSV file (*restaurants_data.tsv*).
 
-## Point 2.
+## Point 2. Search Engine
 
 In this part of the project we implement two search engines:
 * **Conjunctive Search Engine**: returns only the restaurants where all query terms are present in the associated description
@@ -138,7 +138,7 @@ In this part of the project we implement two search engines:
 * Running the cells associated with the first and second search engine triggers an interactive search bar where the user can input a query
 * Click on 'Search', and the ```engine.py``` will be called to execute the appropriate search engine and return the matching restaurants
    
-## Point 3.
+## Point 3. Define a New Score!
 
 ## Point 4. Interactive Map of Italian Regions with restaurants by price range and Top-k restaurants
 
@@ -187,47 +187,10 @@ This project uses Dash and Plotly to create an interactive map of Italian region
     2. Other stuffs
     3. Run Point 4.1 to 
 
-### Screenshot (or GIF) of maps
+### Usage of maps visualization
 
----
 
-## Usage
-
-### 1. **Setup**
-   Install the required Python packages using:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-### 2. **Data Collection**
-   - Run the web crawler to scrape restaurant data:
-     ```bash
-     python crawler.py
-     ```
-   - The crawler saves HTML files and extracted restaurant information into the `data/` directory.
-
-### 3. **Search Engine**
-   - **Conjunctive Search**:
-     ```bash
-     python engine.py --query "modern seasonal cuisine" --type conjunctive
-     ```
-   - **Ranked Search**:
-     ```bash
-     python engine.py --query "modern seasonal cuisine" --type ranked --top_k 10
-     ```
-
-### 4. **Visualization**
-   - Generate a map of restaurants:
-     ```bash
-     python visualization.py
-     ```
-
-### 5. **Advanced Search**
-   - Example usage with filters:
-     ```bash
-     python engine.py --query "Mediterranean cuisine" --type advanced --price_range "€€€" --region "Tuscany"
-     ```
-
+## Point 5. Advanced Search Engine
 ---
 
 ## License
