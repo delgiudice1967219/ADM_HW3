@@ -224,9 +224,26 @@ This sections builds an advanced restaurant search engine using an interactive u
 ### Technologies Used
 * The same libraries as in points 2 and 3
 
-### Steps
+### Steps and Functions
+1. We defined a function ```get_weighted_similarity```, which performs the cosine similarity between user inputs and restaurant data columns. Inside this function, we first distribute weights according to the active text input fields prompted by the user (restaurant name, city, cuisine type). After that, we compute the cosine similarity between each input field and the associated column in the restaurant DataFrame, and aggregate the cosine similarity scores in a weighted average
+2. Then, we defined another function ```enanched_search_restaurants``` that collects inputs from a user interface, applies filtering and the weighted cosine similarity based on the principles from the previous function. Finally, this function outputs a DataFrame with the search results
+3. We use *ipywidgets* to design the user interface, with input fields, dropdowns, checkboxes and buttons for the search criteria
 
-### Usage of Enanched Search Engine User Interface
+### User Interface
+The user interface contains the following components:
+* Text input field for restaurantName
+* Text input field for city
+* Text input field for cuisineType
+* Price Range Filter
+* Region Filter
+* Accepted Credit Cards checkboxes
+* Services and Facilities checkboxes
+* Search button
+
+### Usage of the Advanced Search Engine
+After executing the code cells until point 5, the user will be able to interact with the interface to make an advanced restaurant search. By inputting all the desired criteria and clicking on 'Search', the engine will be triggered to find and return the restaurants that best match the inputs.
+
+Here we can see a practical example of the workings of this search engine:
 
 https://github.com/user-attachments/assets/6dd25cdf-3a59-4426-ad9b-72cc708909d9
 
