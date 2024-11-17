@@ -105,6 +105,39 @@ Before starting the script, these we install each dependency needed:
 
 ## Point 2.
 
+In this part of the project implements two search engines:
+* **Conjunctive Search Engine**: returns only the restaurants where all query terms are present in the associated description
+* **Ranked Search Engine**: returns the top-k restaurants sorted by similarity to the query, using TF-IDF scores and Cosine Similarity
+
+### Libraries Used:
+* nltk (preprocessing)
+* pandas (create vocabulary file)
+* numpy (cosine-similarity)
+* ipywidgets (interactive search engine)
+* IPython.display (display widgets)
+* defaultdict (store inverted_index, updated_inverted_index, preprocessed_docs and others)
+* pickle (store inverted_index in pickle file)
+* unidecode (normalize tokens)
+
+### Steps:
+1. Preprocessing: remove stopwords, punctuation, apply stemming, and perform other useful data cleaning steps
+2. Create a vocabulary.csv file that associates terms from the restaurant descriptions to unique term IDs
+3. Build inverted index that maps unique term IDs to document IDs where the term appears in
+4. Implement the conjunctive search engine that processes input query terms and returns only the restaurants that contain all the query terms in their description
+5. Calculate the TF-IDF scores for each token contained in the restaurant's description
+6. Build an updated inverted index that maps unique term IDs with a list of tuples (doc ID, TF-IDF)
+7. Implement the ranked search engine that processes input query terms and uses cosine-similarity with TF-IDF scores to return the top k restaurants
+
+### Functions in engine.py used in Point 2
+* ```preprocessing```: preprocesses documents and query
+* ```find_restaurants```: implements first search engine
+* ```tf_idf```: computes the TF-IDF scores for a given term and a list of preprocessed documents
+* ```top_k_restaurants```: implements second search engine
+
+### How to use:
+* Running the cells associated with the first and second search engine triggers an interactive search bar where the user can input a query
+* Click on 'Search', and the ```engine.py``` will be called to execute the appropriate search engine and return the matching restaurants
+   
 ## Point 3.
 
 ## Point 4. Interactive Map of Italian Regions with restaurants by price range and Top-k restaurants
