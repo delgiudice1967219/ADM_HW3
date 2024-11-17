@@ -247,6 +247,14 @@ Here we can see a practical example of the workings of this search engine:
 
 https://github.com/user-attachments/assets/6dd25cdf-3a59-4426-ad9b-72cc708909d9
 
+# Algorithmic Question
+
+The last part of the project implements an algorithm to solve the following problem:
+
+*A robot is in a warehouse represented by a coordinate grid and needs to collect n packages. It starts at (0,0), and the i-th package is at (x_i, y_i). No two packages are at the same coordinates, and (0,0) is empty. The robot can only move up ('U') or right ('R'), either from (x,y) to (x+1, y) or (x, y+1). The goal is to collect all n packages with the fewest moves, choosing the lexicographically smallest path if multiple shortest paths exist.*
+
+We first provide a pseudocode of the algorithm, then prove its correctness and time complexity. Afterwards, we show the complexity analysis given by the LLM ChatGPT, and compare it with ours. Finally, we show with a counterexample that a greedy algorithm that solves a more generalized version of this problem (in which the robot can move in every direction), is not always optimal. The last code cells implement the algorithm from the original problem in python.
+
 ---
 
 ## License
