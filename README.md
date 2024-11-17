@@ -1,6 +1,6 @@
 # ADM - Homework 3: Michelin Restaurants in Italy, Group #14
 
-This GitHub repository contains the implementation of the third homework of the **Algorithmic Methods of Data Mining** course for the master's degree in Data Science at Sapienza (2024-2025). This homework was completed by Group #14 in the academic year 2024–2025. The details of the assignement are specified here: https://github.com/Sapienza-University-Rome/ADM/tree/master/2024/Homework_3
+This GitHub repository contains the implementation of the third homework of the **Algorithmic Methods of Data Mining** course for the master's degree in Data Science at Sapienza (2024-2025). This homework was completed by Group #14. The details of the assignement are specified here:  https://github.com/Sapienza-University-Rome/ADM/tree/master/2024/Homework_3
 
 **Team Members:**
 * Xavier Del Giudice, 1967219, delgiudice.1967219@studenti.uniroma1.it
@@ -112,15 +112,15 @@ In this part of the project we implement two search engines:
 * **Conjunctive Search Engine**: returns only the restaurants where all query terms are present in the associated description
 * **Ranked Search Engine**: returns the top-k restaurants sorted by similarity to the query, using TF-IDF scores and Cosine Similarity
 
-### Libraries Used:
-* nltk (preprocessing)
-* pandas (create vocabulary file)
-* numpy (cosine-similarity)
-* ipywidgets (interactive search engine)
-* IPython.display (display widgets)
-* defaultdict (store inverted_index, updated_inverted_index, preprocessed_docs and others)
-* pickle (store inverted_index in pickle file)
-* unidecode (normalize tokens)
+### Technologies Used:
+* *nltk*: Preprocessing documents
+* *pandas*: Handling datasets and creating the vocabulary file
+* *numpy*: Cosine-similarity
+* *ipywidgets*: Interactive search engine
+* *IPython.display*: Display widgets
+* *defaultdict*: Store inverted_index, updated_inverted_index, preprocessed_docs and others
+* *pickle*: Store inverted_index in a pickle file
+* *unidecode*: Normalize tokens
 
 ### Steps:
 1. Preprocessing: remove stopwords, punctuation, apply stemming, and perform other useful data cleaning steps
@@ -147,6 +147,23 @@ In this part of the project we implement two search engines:
 * Click on 'Search', and the ```engine.py``` will be called to execute the appropriate search engine and return the matching restaurants
    
 ## 3. Define a New Score!
+
+This section of the project introduces and implements a new user interface to interact with a search engine that enhances the previous ones by introducing a custom score. This engine, instead of processing only the restaurant descriptions and comparing them to the query, allows users to input specific search criteria in the UI, such as cuisine type, facilities, services, price range, and number of results to display. The UI then calculates a custom score for restaurants, assigning decreasing weights to the search criteria to prioritize the user's needs.
+
+### Technologies Used
+* (the same libraries as in point 2)
+* *itertools*: Used to flatten lists of lists with the chain function
+
+### Steps
+* We implemented a function ```find_restaurants_updated``` which is an enhanced version of ```find_restaurants```, modified to allow the use of multiple columns in the dataset
+* Then, the ```find_top_custom_restaurants``` function (available in engine.py) applies the custom scoring logic and returns a sorted result DataFrame, containing the best matches for the user query based on the search criteria
+* A user interface is then created using ipywidgets, to allow users to interact with the application.
+* Each search triggers the creation of a top_k_results.tsv file, which can be used in map visualization.
+
+### Components of the UI
+* A text input box for entering general search terms
+* Dropdowns and other interactive widgets for selecting cuisine type, facilities/services, price range, number of results to display
+* Buttons for performing the search and clearing all input fields
 
 https://github.com/user-attachments/assets/b6d04672-8e3c-4f37-b4bf-ee574cd8034f
 
