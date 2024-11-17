@@ -157,9 +157,14 @@ In this part of the project we implement two search engines:
 2. Create a vocabulary.csv file that associates terms from the restaurant descriptions to unique term IDs
 3. Build inverted index that maps unique term IDs to document IDs where the term appears in
 4. Implement the conjunctive search engine that processes input query terms and returns only the restaurants that contain all the query terms in their description
-5. Calculate the TF-IDF scores for each token contained in the restaurant's description
-6. Build an updated inverted index that maps unique term IDs with a list of tuples (doc ID, TF-IDF)
-7. Implement the ranked search engine that processes input query terms and uses cosine-similarity with TF-IDF scores to return the top k restaurants
+
+![search2 1](https://github.com/user-attachments/assets/c2eea2a1-bb0a-48e9-bbdb-a5cee7390264)
+
+6. Calculate the TF-IDF scores for each token contained in the restaurant's description
+7. Build an updated inverted index that maps unique term IDs with a list of tuples (doc ID, TF-IDF)
+8. Implement the ranked search engine that processes input query terms and uses cosine-similarity with TF-IDF scores to return the top k restaurants
+
+![search2 2](https://github.com/user-attachments/assets/74a89d65-7957-4bc2-991b-39e6d3cc6884)
 
 ### Functions in engine.py used in Point 2
 * ```preprocessing```: preprocesses documents and query
