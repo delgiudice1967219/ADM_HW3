@@ -45,9 +45,42 @@ Here are links to all the files:
 
 ---
 
+Here’s the **Table of Contents** with hyperlinks for easy navigation:
+
+---
+
+# Table of Contents
+
+1. [Project Overview](##project-overview)  
+2. [Data Collection](#point-1-data-collection)  
+   - [Technologies Used](#technologies-used)  
+   - [Datasets](#datasets)  
+   - [Install Dependencies](#install-dependencies)  
+   - [Steps of the Script](#steps-of-the-script)  
+      1. [Get the List of Michelin Restaurants](#get-the-list-of-michelin-restaurants)  
+      2. [Crawl Michelin Restaurant Pages](#crawl-michelin-restaurant-pages)  
+      3. [Parse Downloaded Pages](#parse-downloaded-pages)  
+3. [Search Engine](#point-2-search-engine)  
+   - [Libraries Used](#libraries-used)  
+   - [Steps](#steps)  
+   - [Functions in `engine.py`](#functions-in-enginepy-used-in-point-2)  
+   - [How to Use](#how-to-use)  
+4. [Define a New Score!](#point-3-define-a-new-score)  
+5. [Interactive Map of Italian Regions](#point-4-interactive-map-of-italian-regions-with-restaurants-by-price-range-and-top-k-restaurants)  
+   - [Features](#features)  
+   - [Technical Implementation](#technical-implementation)  
+   - [How to Run the Application](#how-to-run-the-application)  
+6. [Advanced Search Engine](#point-5-advanced-search-engine)  
+7. [License](#license)  
+
+---
+
+This structure will allow users to click and jump directly to specific sections in your README file. Let me know if there's anything else you'd like to adjust!
+
+---
 ## Project Overview
 
-## Point 1. Data collection
+## 1. Data collection
 
 This project require to scrape data from [Italian Michelin guide website](https://guide.michelin.com/en/it/restaurants), this process is divided into various steps:
 
@@ -103,7 +136,7 @@ Before starting the script, these we install each dependency needed:
    -  **Parsing**: Uses BeautifulSoup to parse HTML and extract information needed, at the end, data will be stored in dictionary.
    -  **Output**: Aggregates the restaurant dictionaries into a Pandas DataFrame and saves the data as a TSV file (*restaurants_data.tsv*).
 
-## Point 2. Search Engine
+## 2. Search Engine
 
 In this part of the project we implement two search engines:
 * **Conjunctive Search Engine**: returns only the restaurants where all query terms are present in the associated description
@@ -138,9 +171,9 @@ In this part of the project we implement two search engines:
 * Running the cells associated with the first and second search engine triggers an interactive search bar where the user can input a query
 * Click on 'Search', and the ```engine.py``` will be called to execute the appropriate search engine and return the matching restaurants
    
-## Point 3. Define a New Score!
+## 3. Define a New Score!
 
-## Point 4. Interactive Map of Italian Regions with restaurants by price range and Top-k restaurants
+## 4. Interactive Map of Italian Regions with restaurants by price range and Top-k restaurants
 
 This project uses Dash and Plotly to create an interactive map of Italian regions. Users can select a region by clicking on the map and view additional details, such as the restaurants in the selected region.
 
@@ -190,7 +223,7 @@ This project uses Dash and Plotly to create an interactive map of Italian region
 ### Usage of maps visualization
 
 
-## Point 5. Advanced Search Engine
+## 5. Advanced Search Engine
 ---
 
 ## License
