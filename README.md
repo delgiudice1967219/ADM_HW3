@@ -105,7 +105,7 @@ Before starting the script, these we install each dependency needed:
 
 ## Point 2.
 
-In this part of the project implements two search engines:
+In this part of the project we implement two search engines:
 * **Conjunctive Search Engine**: returns only the restaurants where all query terms are present in the associated description
 * **Ranked Search Engine**: returns the top-k restaurants sorted by similarity to the query, using TF-IDF scores and Cosine Similarity
 
