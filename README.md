@@ -162,6 +162,8 @@ This section of the project introduces and implements a new user interface to in
 * Dropdowns and other interactive widgets for selecting cuisine type, facilities/services, price range, number of results to display
 * Buttons for performing the search and clearing all input fields
 
+### Usage of Custom Score Search Engine User Interface
+
 https://github.com/user-attachments/assets/b6d04672-8e3c-4f37-b4bf-ee574cd8034f
 
 ## 4. Interactive Map of Italian Regions with restaurants by price range and Top-k restaurants
@@ -211,7 +213,7 @@ This project uses Dash and Plotly to create an interactive map of Italian region
     2. Other stuffs
     3. Run Point 4.1 to 
 
-### Usage of maps visualization
+### Usage of Maps Visualization
 
 https://github.com/user-attachments/assets/6df75914-25e6-4b96-93f0-d4db64be7151
 
@@ -224,6 +226,7 @@ This sections builds an advanced restaurant search engine using an interactive u
 
 ### Steps
 
+### Usage of Enanched Search Engine User Interface
 
 https://github.com/user-attachments/assets/6dd25cdf-3a59-4426-ad9b-72cc708909d9
 
