@@ -1,11 +1,13 @@
 # ADM - Homework 3: Michelin Restaurants in Italy, Group #14
 
-This GitHub repository contains the implementation of the third homework of the **Algorithmic Methods of Data Mining** course for the master's degree in Data Science at Sapienza (2024-2025). This homework was completed by Group #9 in the academic year 2024–2025.
+This GitHub repository contains the implementation of the third homework of the **Algorithmic Methods of Data Mining** course for the master's degree in Data Science at Sapienza (2024-2025). This homework was completed by Group #9 in the academic year 2024–2025. The details of the assignement are specified here: https://github.com/Sapienza-University-Rome/ADM/tree/master/2024/Homework_3
 
 **Team Members:**
 * Xavier Del Giudice, 1967219, delgiudice.1967219@studenti.uniroma1.it
 * Alessio Iacono, 1870276, iacono.1870276@studenti.uniroma1.it
 * Géraldine Valérie Maurer, 1996887, gmaurer08@gmail.com
+
+The ```main.ipynb``` with the main script can be visualized in the jupyter notebook viewer: **INSERT LINK TO NBVIEWER**
 
 ## Repository Structure
 
