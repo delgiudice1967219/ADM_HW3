@@ -169,3 +169,7 @@ vocabulary.csv
 mainTest copy.ipynb
 michelin_restaurant_urls.txt
 mainTest copy 2.ipynb
+doc_tf_idf_scores.pkl
+inverted_index.pkl
+top_k_result.tsv
+updated_inverted_index.pkl

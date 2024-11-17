@@ -57,17 +57,17 @@ def iterate_geo_folders(output_dir):
     restaurants_data = []
 
     # Loop through all files in the directory and extract information
-    # Itera attraverso le pagine da 1 a 100
     for page_num in range(1, 101):
-        # Costruisci il percorso della cartella per ciascuna pagina
+        # Build directory path for each page to scrape
         folder_path = os.path.join(output_dir, f"page_{page_num}")
         
-        # Trova tutti i file HTML nella cartella corrente
+        # Search for all and only .html files
         html_files = glob.glob(os.path.join(folder_path, "*.html"))
         
-        # Itera attraverso i file trovati e processa ciascuno
+        # Iterates through the found files and processes each one
         for file_path in html_files:
             print("Processing:", file_path)
+            # Scrape geodata
             restaurant_info = parser.extract_geo_info(file_path)
             restaurants_data.append(restaurant_info)
 
@@ -393,7 +393,7 @@ def find_top_custom_restaurants(query, vocabulary_df, inverted_index, df, k=5):
         top_k_df = pd.DataFrame([restaurant[1] for restaurant in top_k_restaurants])
         top_k_df['customScore'] = [restaurant[0] for restaurant in top_k_restaurants]
         # Save the result in a different .tsv file for represent those in the map plot
-        top_k_df.to_csv('C:/Users/xavie/Documents/ADM_HW3/top_k_result.tsv', sep='\t', index=False)
+        top_k_df.to_csv('top_k_result.tsv', sep='\t', index=False)
         return top_k_df[['restaurantName', 'address', 'description', 'website', 'customScore']]
     else:
         return pd.DataFrame()
