@@ -220,6 +220,14 @@ https://github.com/user-attachments/assets/6df75914-25e6-4b96-93f0-d4db64be7151
 
 ## 5. Advanced Search Engine
 
+This sections builds an advanced restaurant search engine using an interactive user interface. We used a system in which the user can search restaurants based on various criteria, combining them in a filtering process and weighted cosine similarity scores for text fields.
+
+### Technologies Used
+* The same libraries as in points 2 and 3
+
+### Steps
+
+
 https://github.com/user-attachments/assets/6dd25cdf-3a59-4426-ad9b-72cc708909d9
 
 ---
